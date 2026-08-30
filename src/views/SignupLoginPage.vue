@@ -49,12 +49,15 @@
     <div class="container-fluid mt-1 d-flex justify-content-center align-items-center p-3" style="min-height: calc(100vh - 58px);">
         <div class="card p-4 shadow-lg border-0" 
              style="width: 98%; height: calc(100vh - 100px); background-color: #e2ead0; backdrop-filter: blur(10px)" >
-        
+            <div class="position-absolute top-0 end-0 mt-3 me-3">
+                <!-- Exit -->
+                <a href="/" class="btn-close p-2" aria-label="Close" title="Exit to Main Screen"></a>
+            </div>
             <div class="card-body">
                 <div class="row mb-3">
-                    <div class="col-12 col-md-6 d-flex flex-column justify-content-center border-end border-dark border-opacity-10 py-4">
+                    <div class="col-12 col-md-6 d-flex flex-column border-end border-dark border-opacity-10 py-4">
+                        <!-- SIGN UP -->
                         <h1 class="text-center fw-bold mb-4">Sign Up</h1>
-
                         <form style="width: 100%;">
                             <!-- Username -->
                             <div class="form-floating mb-4">
@@ -94,14 +97,31 @@
                         </form>
                     </div>
                     
-                    <div class="col-12 col-md-6 d-flex flex-column justify-content-center py-4">
-                        <h1 class="text-center fw-bold mb-4">Sign Up</h1>
-
-                        <label for="name" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="name" placeholder="Enter your name">
-
-                        <label for="email" class="form-label">Email address</label>
-                        <input type="email" class="form-control" id="email" placeholder="Enter your email">
+                    <!-- LOG IN -->
+                    <div class="col-12 col-md-6 d-flex flex-column py-4">
+                        <h1 class="text-center fw-bold mb-4">Log In</h1>
+                        <form style="width: 100%;">
+                            <!-- Username -->
+                            <div class="form-floating mb-4">
+                                <input type="text" class="form-control" id="username" placeholder="Username">
+                                <label for="username">Username</label>
+                            </div>
+                            <!-- Email -->
+                            <div class="form-floating mb-4">
+                                <input type="email" class="form-control" id="loginEmail" placeholder="name@example.com">
+                                <label for="loginEmail">Email address</label>
+                            </div>
+                            <!-- Password -->
+                            <div class="form-floating mb-4">
+                                <input type="password" class="form-control" id="loginPassword" placeholder="Password">
+                                <label for="loginPassword">Password</label>
+                            </div>
+                            <!-- Buttons -->
+                             <div class="d-flex gap-3">
+                                <button type="button" class="btn w-100 py-2 fw-semibold text-white" style="background-color: #aaa46e;" @click="clearForm">Clear</button>
+                                <button type="submit" class="btn w-100 py-2 fw-semibold text-white" style="background-color: #384232;">Log In</button>
+                            </div> 
+                        </form>
                     </div>
 
                 </div>
