@@ -48,14 +48,14 @@
    <!-- MAIN -->
     <div class="container-fluid mt-1 d-flex justify-content-center align-items-center p-3" style="min-height: calc(100vh - 58px);">
         <div class="card p-4 shadow-lg border-0" 
-             style="width: 98%; height: calc(100vh - 100px); background-color: #e2ead0; backdrop-filter: blur(10px)" >
+             style="width: 98%; min-height: calc(100vh - 100px); background-color: #e2ead0; backdrop-filter: blur(10px)" >
             <div class="position-absolute top-0 end-0 mt-3 me-3">
                 <!-- Exit -->
                 <a href="/" class="btn-close p-2" aria-label="Close" title="Exit to Main Screen"></a>
             </div>
-            <div class="card-body">
-                <div class="row mb-3">
-                    <div class="col-12 col-md-6 d-flex flex-column border-end border-dark border-opacity-10 py-4">
+            <div class="card-body h-100 d-flex flex-column">
+                <div class="row h-100 align-items-stretch flex-grow-1">
+                    <div class="col-12 col-md-6 d-flex flex-column justify-content-start center-divider py-4 pb-5 pb-md-4">
                         <!-- SIGN UP -->
                         <h1 class="text-center fw-bold mb-4">Sign Up</h1>
                         <form style="width: 100%;">
@@ -98,7 +98,7 @@
                     </div>
                     
                     <!-- LOG IN -->
-                    <div class="col-12 col-md-6 d-flex flex-column py-4">
+                    <div class="col-12 col-md-6 d-flex flex-column py-4 pt-5 pt-md-4">
                         <h1 class="text-center fw-bold mb-4">Log In</h1>
                         <form style="width: 100%;">
                             <!-- Username -->
@@ -140,5 +140,18 @@ const isNavbarExpanded = ref(false)
 
 
 <style scoped>
+/* 📱 MOBILE VIEW: Draws a horizontal line under the first section */
+.center-divider {
+    border-bottom: 1px solid rgba(56, 66, 50, 0.3); /* Matches your dark green color at 10% opacity */
+}
 
+/* 💻 DESKTOP VIEW (Medium screens and up): Swaps the line to the vertical right edge */
+@media (min-width: 768px) {
+    .center-divider {
+        border-bottom: 0 !important; /* Disables the mobile bottom line */
+        
+        /* 🛠️ Explicitly using border-right overrides layout reset conflicts */
+        border-right: 1px solid rgba(56, 66, 50, 0.3) !important; 
+    }
+}
 </style>
