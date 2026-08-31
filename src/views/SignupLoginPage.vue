@@ -58,35 +58,66 @@
                     <div class="col-12 col-md-6 d-flex flex-column justify-content-start center-divider py-4 pb-5 pb-md-4">
                         <!-- SIGN UP -->
                         <h1 class="text-center fw-bold mb-4">Sign Up</h1>
-                        <form style="width: 100%;">
+                        <form @submit.prevent="submitForm" style="width: 100%;">
                             <!-- Username -->
                             <div class="form-floating mb-4">
-                                <input type="text" class="form-control" id="username" placeholder="Username">
+                                <input type="text" class="form-control" id="username" 
+                                @blur="() => validateName(true)"
+                                @input="() => validateName(false)"
+                                v-model="formData.username"
+                                placeholder="Username"/>
+                                <div v-if="errors.username" class="text-danger mt-1">{{ errors.username }}</div>
                                 <label for="username">Username</label>
                             </div>
                             <!-- Email -->
                             <div class="form-floating mb-4">
-                                <input type="email" class="form-control" id="loginEmail" placeholder="name@example.com">
+                                <input type="email" class="form-control" id="loginEmail" 
+                                @blur="() => validateEmail(true)"
+                                @input="() => validateEmail(false)"
+                                v-model="formData.email" 
+                                placeholder="name@example.com">
+                                <div v-if="errors.email" class="text-danger mt-1">{{ errors.email }}</div>
                                 <label for="loginEmail">Email address</label>
                             </div>
                             <!-- Password -->
                             <div class="form-floating mb-4">
-                                <input type="password" class="form-control" id="loginPassword" placeholder="Password">
+                                <input :type="showPassword ? 'text' : 'password'" class="form-control" id="loginPassword" 
+                                @blur="() => validatePassword(true)"
+                                @input="() => validatePassword(false)"
+                                v-model="formData.password"
+                                placeholder="Password">
+                                <div v-if="errors.password" class="text-danger mt-1">{{ errors.password }}</div>
                                 <label for="loginPassword">Password</label>
+                                <button type="button" 
+                                        class="btn position-absolute top-50 end-0 translate-middle-y me-2 border-0 z-3 text-secondary btn-sm"
+                                        @click="showPassword = !showPassword">
+                                    {{ showPassword ? 'Hide' : 'Show' }}
+                                </button>
                             </div>
                             <!-- Confirm Password -->
                             <div class="form-floating mb-4">
-                                <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password">
+                                <input :type="showConfirmPassword ? 'text' : 'password'" class="form-control" id="confirmPassword" 
+                                @blur="() => validateConfirmPassword(true)"
+                                v-model="formData.confirmPassword"
+                                placeholder="Confirm Password">
+                                <div v-if="errors.confirmPassword" class="text-danger mt-1">{{ errors.confirmPassword }}</div>
                                 <label for="confirmPassword">Confirm Password</label>
+                                <button type="button" 
+                                        class="btn position-absolute top-50 end-0 translate-middle-y me-2 border-0 z-3 text-secondary btn-sm"
+                                        @click="showConfirmPassword = !showConfirmPassword">
+                                    {{ showConfirmPassword ? 'Hide' : 'Show' }}
+                                </button>
                             </div>
                             <!-- Account Type -->
                             <div class="form-floating mb-4">
-                                <select class="form-select" id="accountType" placeholder="Account Type">
+                                <select class="form-select" id="accountType" 
+                                v-model="formData.accountType" placeholder="Account Type">
                                     <option value="" disabled selected>Select account type</option>
                                     <option value="User">User</option>
                                     <option value="Admin">Admin</option>
                                 </select>
                                 <label for="accountType">Account Type</label>
+                                <div v-if="errors.accountType" class="text-danger mt-1">{{ errors.accountType }}</div>
                             </div>
                             <!-- Buttons -->
                             <div class="d-flex gap-3">
@@ -103,17 +134,17 @@
                         <form style="width: 100%;">
                             <!-- Username -->
                             <div class="form-floating mb-4">
-                                <input type="text" class="form-control" id="username" placeholder="Username">
+                                <input type="text" class="form-control" id="username" v-model="formData.username" placeholder="Username">
                                 <label for="username">Username</label>
                             </div>
                             <!-- Email -->
                             <div class="form-floating mb-4">
-                                <input type="email" class="form-control" id="loginEmail" placeholder="name@example.com">
+                                <input type="email" class="form-control" id="loginEmail" v-model="formData.email" placeholder="name@example.com">
                                 <label for="loginEmail">Email address</label>
                             </div>
                             <!-- Password -->
                             <div class="form-floating mb-4">
-                                <input type="password" class="form-control" id="loginPassword" placeholder="Password">
+                                <input :type="showPassword ? 'text' : 'password'" class="form-control" id="loginPassword" v-model="formData.password" placeholder="Password">
                                 <label for="loginPassword">Password</label>
                             </div>
                             <!-- Buttons -->
@@ -135,17 +166,114 @@
 
 <script setup>
 import { ref } from 'vue'
+
 const isNavbarExpanded = ref(false)
+const showPassword = ref(false);
+const showConfirmPassword = ref(false);
+
+const formData = ref({
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    accountType: ''
+});
+
+const submittedCards = ref([])
+
+const clearForm = () => {
+    formData.value.username = ''
+    formData.value.email = ''
+    formData.value.password = ''
+    formData.value.confirmPassword = ''
+    formData.value.accountType = ''
+}
+
+const errors = ref({
+    username: null,
+    email: null,
+    password: null,
+    confirmPassword: null,
+    accountType: null
+})
+
+const validateName = (blur) => {
+    if (formData.value.username.length < 3) {
+        errors.value.username = 'Name must be at least 3 characters long.'
+    } else {
+        errors.value.username = null
+    }
+};
+
+const validateEmail = (blur) => {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailPattern.test(formData.value.email)) {
+        errors.value.email = 'Please enter a valid email address.'
+    } else {
+        errors.value.email = null
+    }
+};
+
+const validatePassword = (blur) => {
+  const password = formData.value.password
+  const minLength = 8
+  const hasUppercase = /[A-Z]/.test(password)
+  const hasLowercase = /[a-z]/.test(password)
+  const hasNumber = /\d/.test(password)
+  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password)
+
+  if (password.length < minLength) {
+    if (blur) errors.value.password = `Password must be at least ${minLength} characters long.`
+  } else if (!hasUppercase) {
+    if (blur) errors.value.password = 'Password must contain at least one uppercase letter.'
+  } else if (!hasLowercase) {
+    if (blur) errors.value.password = 'Password must contain at least one lowercase letter.'
+  } else if (!hasNumber) {
+    if (blur) errors.value.password = 'Password must contain at least one number.'
+  } else if (!hasSpecialChar) {
+    if (blur) errors.value.password = 'Password must contain at least one special character.'
+  } else {
+    errors.value.password = null
+  }
+}
+
+const validateConfirmPassword = (blur) => {
+  if (formData.value.password !== formData.value.confirmPassword) {
+    if (blur) errors.value.confirmPassword = 'Passwords do not match.'
+  } else {
+    errors.value.confirmPassword = null
+  }
+}
+
+const validateAccountType = (blur) => {
+    if (!formData.value.accountType) {
+        errors.value.accountType = 'Please select an account type.'
+    } else {
+        errors.value.accountType = null
+    }
+};
+
+const submitForm = () => {
+    validateName(true);
+    validateEmail(true);
+    validatePassword(true);
+    validateConfirmPassword(true);
+    validateAccountType(true);
+    
+    if (!errors.value.username && !errors.value.email && !errors.value.password && !errors.value.confirmPassword && !errors.value.accountType) {
+        submittedCards.value.push({...formData.value});
+        clearForm();
+    }
+};
 </script>
 
 
 <style scoped>
-/* 📱 MOBILE VIEW: Draws a horizontal line under the first section */
+
 .center-divider {
     border-bottom: 1px solid rgba(56, 66, 50, 0.3); /* Matches your dark green color at 10% opacity */
 }
 
-/* 💻 DESKTOP VIEW (Medium screens and up): Swaps the line to the vertical right edge */
 @media (min-width: 768px) {
     .center-divider {
         border-bottom: 0 !important; /* Disables the mobile bottom line */
@@ -154,4 +282,5 @@ const isNavbarExpanded = ref(false)
         border-right: 1px solid rgba(56, 66, 50, 0.3) !important; 
     }
 }
+
 </style>
