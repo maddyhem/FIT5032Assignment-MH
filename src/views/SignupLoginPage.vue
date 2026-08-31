@@ -81,13 +81,13 @@
                             </div>
                             <!-- Password -->
                             <div class="form-floating mb-4">
-                                <input :type="showPassword ? 'text' : 'password'" class="form-control" id="loginPassword" 
+                                <input :type="showPassword ? 'text' : 'password'" class="form-control" id="signupPassword" 
                                 @blur="() => validatePassword(true)"
                                 @input="() => validatePassword(false)"
-                                v-model="formData.password"
+                                v-model="formData.signupPassword"
                                 placeholder="Password">
                                 <div v-if="errors.password" class="text-danger mt-1">{{ errors.password }}</div>
-                                <label for="loginPassword">Password</label>
+                                <label for="signupPassword">Password</label>
                                 <button type="button" 
                                         class="btn position-absolute top-50 end-0 translate-middle-y me-2 border-0 z-3 text-secondary btn-sm"
                                         @click="showPassword = !showPassword">
@@ -96,12 +96,12 @@
                             </div>
                             <!-- Confirm Password -->
                             <div class="form-floating mb-4">
-                                <input :type="showConfirmPassword ? 'text' : 'password'" class="form-control" id="confirmPassword" 
+                                <input :type="showConfirmPassword ? 'text' : 'signupPassword'" class="form-control" id="confirmSignupPassword" 
                                 @blur="() => validateConfirmPassword(true)"
                                 v-model="formData.confirmPassword"
                                 placeholder="Confirm Password">
                                 <div v-if="errors.confirmPassword" class="text-danger mt-1">{{ errors.confirmPassword }}</div>
-                                <label for="confirmPassword">Confirm Password</label>
+                                <label for="confirmSignupPassword">Confirm Password</label>
                                 <button type="button" 
                                         class="btn position-absolute top-50 end-0 translate-middle-y me-2 border-0 z-3 text-secondary btn-sm"
                                         @click="showConfirmPassword = !showConfirmPassword">
@@ -132,20 +132,20 @@
                     <div class="col-12 col-md-6 d-flex flex-column py-4 pt-5 pt-md-4">
                         <h1 class="text-center fw-bold mb-4">Log In</h1>
                         <form style="width: 100%;">
-                            <!-- Username -->
-                            <div class="form-floating mb-4">
-                                <input type="text" class="form-control" id="username" v-model="formData.username" placeholder="Username">
-                                <label for="username">Username</label>
-                            </div>
                             <!-- Email -->
                             <div class="form-floating mb-4">
-                                <input type="email" class="form-control" id="loginEmail" v-model="formData.email" placeholder="name@example.com">
+                                <input type="email" class="form-control" id="loginEmail" v-model="formData.loginEmail" placeholder="name@example.com">
                                 <label for="loginEmail">Email address</label>
                             </div>
                             <!-- Password -->
                             <div class="form-floating mb-4">
-                                <input :type="showPassword ? 'text' : 'password'" class="form-control" id="loginPassword" v-model="formData.password" placeholder="Password">
+                                <input :type="showLoginPassword ? 'text' : 'password'" class="form-control" id="loginPassword" v-model="formData.loginPassword" placeholder="Password">
                                 <label for="loginPassword">Password</label>
+                                <button type="button" 
+                                        class="btn position-absolute top-50 end-0 translate-middle-y me-2 border-0 z-3 text-secondary btn-sm"
+                                        @click="showLoginPassword = !showLoginPassword">
+                                    {{ showLoginPassword ? 'Hide' : 'Show' }}
+                                </button>
                             </div>
                             <!-- Buttons -->
                              <div class="d-flex gap-3">
@@ -170,6 +170,7 @@ import { ref } from 'vue'
 const isNavbarExpanded = ref(false)
 const showPassword = ref(false);
 const showConfirmPassword = ref(false);
+const showLoginPassword = ref(false);
 
 const formData = ref({
     username: '',
