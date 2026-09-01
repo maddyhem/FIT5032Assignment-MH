@@ -51,8 +51,9 @@
                             </div>
                             <!-- Confirm Password -->
                             <div class="form-floating mb-4">
-                                <input :type="showConfirmPassword ? 'text' : 'signupPassword'" class="form-control" id="confirmSignupPassword" 
+                                <input :type="showConfirmPassword ? 'text' : 'password'" class="form-control" id="confirmSignupPassword" 
                                 @blur="() => validateConfirmPassword(true)"
+                                @input="() => validateConfirmPassword(false)"
                                 v-model="formData.confirmPassword"
                                 placeholder="Confirm Password">
                                 <div v-if="errors.confirmPassword" class="text-danger mt-1">{{ errors.confirmPassword }}</div>
@@ -171,7 +172,7 @@ const validateEmail = (blur) => {
 };
 
 const validatePassword = (blur) => {
-  const password = formData.value.password
+  const password = formData.value.signupPassword
   const minLength = 8
   const hasUppercase = /[A-Z]/.test(password)
   const hasLowercase = /[a-z]/.test(password)
@@ -194,7 +195,7 @@ const validatePassword = (blur) => {
 }
 
 const validateConfirmPassword = (blur) => {
-  if (formData.value.password !== formData.value.confirmPassword) {
+  if (formData.value.signupPassword !== formData.value.confirmPassword) {
     if (blur) errors.value.confirmPassword = 'Passwords do not match.'
   } else {
     errors.value.confirmPassword = null
