@@ -179,6 +179,11 @@ const validatePassword = (blur) => {
   const hasNumber = /\d/.test(password)
   const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password)
 
+  if (!password) {
+    if (blur) errors.value.password = 'Password is required.'
+    return
+  }
+
   if (password.length < minLength) {
     if (blur) errors.value.password = `Password must be at least ${minLength} characters long.`
   } else if (!hasUppercase) {
@@ -195,6 +200,10 @@ const validatePassword = (blur) => {
 }
 
 const validateConfirmPassword = (blur) => {
+  if (!formData.value.signupPassword && !formData.value.confirmPassword) {
+    errors.value.confirmPassword = null
+    return
+  }
   if (formData.value.signupPassword !== formData.value.confirmPassword) {
     if (blur) errors.value.confirmPassword = 'Passwords do not match.'
   } else {
