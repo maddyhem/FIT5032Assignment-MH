@@ -1,13 +1,13 @@
 <template>
-    <!-- REMOVED: Outer container box wrapper so navbar spans 100% viewport width -->
+    
     <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
         <div class="container-fluid px-4">
-            <!-- Logo link pointing to the classic Rick Astley track -->
-            <a class="navbar-brand d-flex align-items-center" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+            
+            <a class="navbar-brand d-flex align-items-center" href="/main">
                 <img src="../assets/placeholder.png" class="img-fluid" style="max-height: 40px;" alt="Logo">
             </a>
 
-            <!-- Mobile responsive breakdown menu burger button toggle trigger switch -->
+            
             <button 
                 class="navbar-toggler" 
                 type="button" 
@@ -17,10 +17,10 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             
-            <!-- Dynamic menu link tray visibility panel wrapper wrapper -->
+            
             <div class="collapse navbar-collapse justify-content-center" :class="{ 'show': isNavbarExpanded }" id="navbarNav">
                 <ul class="navbar-nav gap-5">
-                    <!-- FIXED: Upgraded links to router-link components -->
+                    
                     <li class="nav-item">
                         <router-link class="nav-link" to="/about" active-class="active">About</router-link>
                     </li>
@@ -37,7 +37,7 @@
             </div>
 
             <!-- Profile dashboard route navigator portal action node -->
-            <router-link to="/profile" class="btn btn-outline-secondary rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 40px; height: 40px; padding: 0;" title="View Profile">
+            <router-link to="/signuplogin" class="btn btn-outline-secondary rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 40px; height: 40px; padding: 0;" title="View Profile">
                 <i class="bi bi-person-circle fs-5"></i>
             </router-link>
         </div>
