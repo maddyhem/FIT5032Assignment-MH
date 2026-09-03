@@ -141,7 +141,7 @@ const submittedCards = ref([])
 const clearForm = () => {
     formData.value.username = ''
     formData.value.email = ''
-    formData.value.password = ''
+    formData.value.signupPassword = ''
     formData.value.confirmPassword = ''
     formData.value.accountType = ''
 }
