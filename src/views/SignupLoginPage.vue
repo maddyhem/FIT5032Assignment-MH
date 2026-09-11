@@ -123,6 +123,8 @@
 <script setup>
 import { ref } from 'vue'
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
+import { db } from '../main'; 
 import { useRouter } from "vue-router"
 
 const router = useRouter()
@@ -153,6 +155,8 @@ const clearForm = () => {
     signupData.value.signupPassword = ''
     signupData.value.confirmPassword = ''
     signupData.value.accountType = ''
+    loginData.value.loginEmail = ''
+    loginData.value.loginPassword = ''
 }
 
 const errors = ref({
@@ -243,14 +247,28 @@ const signupUser = async () => {
                 signupData.value.signupPassword
             )
             console.log('Firebase sign up success')
+
+            // attach uid to other user info
+            const user = userSignup.user;
+
+            await setDoc(doc(db, "UserInfo", user.uid), {
+                username: signupData.value.username,
+                accountType: signupData.value.accountType,
+                email: signupData.value.email,
+            });
+
+            console.log('Firebase auth account created and Firestore user profile saved successfully!');
+        
+            
             clearForm()
             router.push('/main')
         } catch (error) {
-            console.error('Firebase sign in unsuccessful', error.code)
+            console.error('Firebase sign in unsuccessful', error); 
+            
             if (error.code === 'auth/email-already-in-use') {
                 errors.value.email = 'This email is already in use.'
             } else {
-                errors.value.email = 'Authentication failed. Please try again.'
+                errors.value.email = error.message || 'Authentication failed. Please try again.'
             }
         }
 
