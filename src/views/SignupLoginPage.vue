@@ -13,13 +13,13 @@
                     <div class="col-12 col-md-6 d-flex flex-column justify-content-start center-divider py-4 pb-5 pb-md-4">
                         <!-- SIGN UP -->
                         <h1 class="text-center fw-bold mb-4">Sign Up</h1>
-                        <form @submit.prevent="submitForm" style="width: 100%;">
+                        <form @submit.prevent="signupUser" style="width: 100%;">
                             <!-- Username -->
                             <div class="form-floating mb-4">
                                 <input type="text" class="form-control" id="username" 
                                 @blur="() => validateName(true)"
                                 @input="() => validateName(false)"
-                                v-model="formData.username"
+                                v-model="signupData.username"
                                 placeholder="Username"/>
                                 <div v-if="errors.username" class="text-danger mt-1">{{ errors.username }}</div>
                                 <label for="username">Username</label>
@@ -29,7 +29,7 @@
                                 <input type="email" class="form-control" id="loginEmail" 
                                 @blur="() => validateEmail(true)"
                                 @input="() => validateEmail(false)"
-                                v-model="formData.email" 
+                                v-model="signupData.email" 
                                 placeholder="name@example.com">
                                 <div v-if="errors.email" class="text-danger mt-1">{{ errors.email }}</div>
                                 <label for="loginEmail">Email address</label>
@@ -39,7 +39,7 @@
                                 <input :type="showPassword ? 'text' : 'password'" class="form-control" id="signupPassword" 
                                 @blur="() => validatePassword(true)"
                                 @input="() => validatePassword(false)"
-                                v-model="formData.signupPassword"
+                                v-model="signupData.signupPassword"
                                 placeholder="Password">
                                 <div v-if="errors.password" class="text-danger mt-1">{{ errors.password }}</div>
                                 <label for="signupPassword">Password</label>
@@ -54,7 +54,7 @@
                                 <input :type="showConfirmPassword ? 'text' : 'password'" class="form-control" id="confirmSignupPassword" 
                                 @blur="() => validateConfirmPassword(true)"
                                 @input="() => validateConfirmPassword(false)"
-                                v-model="formData.confirmPassword"
+                                v-model="signupData.confirmPassword"
                                 placeholder="Confirm Password">
                                 <div v-if="errors.confirmPassword" class="text-danger mt-1">{{ errors.confirmPassword }}</div>
                                 <label for="confirmSignupPassword">Confirm Password</label>
@@ -67,7 +67,7 @@
                             <!-- Account Type -->
                             <div class="form-floating mb-4">
                                 <select class="form-select" id="accountType" 
-                                v-model="formData.accountType" placeholder="Account Type">
+                                v-model="signupData.accountType" placeholder="Account Type">
                                     <option value="" disabled selected>Select account type</option>
                                     <option value="User">User</option>
                                     <option value="Admin">Admin</option>
@@ -87,15 +87,15 @@
                     <!-- LOG IN -->
                     <div class="col-12 col-md-6 d-flex flex-column py-4 pt-5 pt-md-4">
                         <h1 class="text-center fw-bold mb-4">Log In</h1>
-                        <form style="width: 100%;">
+                        <form @submit.prevent="loginUser" style="width: 100%;">
                             <!-- Email -->
                             <div class="form-floating mb-4">
-                                <input type="email" class="form-control" id="loginEmail" v-model="formData.loginEmail" placeholder="name@example.com">
+                                <input type="email" class="form-control" id="loginEmail" v-model="loginData.loginEmail" placeholder="name@example.com">
                                 <label for="loginEmail">Email address</label>
                             </div>
                             <!-- Password -->
                             <div class="form-floating mb-4">
-                                <input :type="showLoginPassword ? 'text' : 'password'" class="form-control" id="loginPassword" v-model="formData.loginPassword" placeholder="Password">
+                                <input :type="showLoginPassword ? 'text' : 'password'" class="form-control" id="loginPassword" v-model="loginData.loginPassword" placeholder="Password">
                                 <label for="loginPassword">Password</label>
                                 <button type="button" 
                                         class="btn position-absolute top-50 end-0 translate-middle-y me-2 border-0 z-3 text-secondary btn-sm"
@@ -122,28 +122,37 @@
 
 <script setup>
 import { ref } from 'vue'
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { useRouter } from "vue-router"
 
+const router = useRouter()
+const auth = getAuth()
 const isNavbarExpanded = ref(false)
 const showPassword = ref(false);
 const showConfirmPassword = ref(false);
 const showLoginPassword = ref(false);
 
-const formData = ref({
+const signupData = ref({
     username: '',
     email: '',
-    password: '',
+    signupPassword: '',
     confirmPassword: '',
     accountType: ''
+});
+
+const loginData = ref({
+    loginEmail: '',
+    loginPassword: '',
 });
 
 const submittedCards = ref([])
 
 const clearForm = () => {
-    formData.value.username = ''
-    formData.value.email = ''
-    formData.value.signupPassword = ''
-    formData.value.confirmPassword = ''
-    formData.value.accountType = ''
+    signupData.value.username = ''
+    signupData.value.email = ''
+    signupData.value.signupPassword = ''
+    signupData.value.confirmPassword = ''
+    signupData.value.accountType = ''
 }
 
 const errors = ref({
@@ -155,7 +164,7 @@ const errors = ref({
 })
 
 const validateName = (blur) => {
-    if (formData.value.username.length < 3) {
+    if (signupData.value.username.length < 3) {
         errors.value.username = 'Name must be at least 3 characters long.'
     } else {
         errors.value.username = null
@@ -164,7 +173,7 @@ const validateName = (blur) => {
 
 const validateEmail = (blur) => {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailPattern.test(formData.value.email)) {
+    if (!emailPattern.test(signupData.value.email)) {
         errors.value.email = 'Please enter a valid email address.'
     } else {
         errors.value.email = null
@@ -172,7 +181,7 @@ const validateEmail = (blur) => {
 };
 
 const validatePassword = (blur) => {
-  const password = formData.value.signupPassword
+  const password = signupData.value.signupPassword
   const minLength = 8
   const hasUppercase = /[A-Z]/.test(password)
   const hasLowercase = /[a-z]/.test(password)
@@ -200,11 +209,11 @@ const validatePassword = (blur) => {
 }
 
 const validateConfirmPassword = (blur) => {
-  if (!formData.value.signupPassword && !formData.value.confirmPassword) {
+  if (!signupData.value.signupPassword && !signupData.value.confirmPassword) {
     errors.value.confirmPassword = null
     return
   }
-  if (formData.value.signupPassword !== formData.value.confirmPassword) {
+  if (signupData.value.signupPassword !== signupData.value.confirmPassword) {
     if (blur) errors.value.confirmPassword = 'Passwords do not match.'
   } else {
     errors.value.confirmPassword = null
@@ -212,14 +221,14 @@ const validateConfirmPassword = (blur) => {
 }
 
 const validateAccountType = (blur) => {
-    if (!formData.value.accountType) {
+    if (!signupData.value.accountType) {
         errors.value.accountType = 'Please select an account type.'
     } else {
         errors.value.accountType = null
     }
 };
 
-const submitForm = () => {
+const signupUser = async () => {
     validateName(true);
     validateEmail(true);
     validatePassword(true);
@@ -227,10 +236,69 @@ const submitForm = () => {
     validateAccountType(true);
     
     if (!errors.value.username && !errors.value.email && !errors.value.password && !errors.value.confirmPassword && !errors.value.accountType) {
-        submittedCards.value.push({...formData.value});
-        clearForm();
+        try {
+            const userSignup = await createUserWithEmailAndPassword(
+                auth,
+                signupData.value.email,
+                signupData.value.signupPassword
+            )
+            console.log('Firebase sign up success')
+            clearForm()
+            router.push('/main')
+        } catch (error) {
+            console.error('Firebase sign in unsuccessful', error.code)
+            if (error.code === 'auth/email-already-in-use') {
+                errors.value.email = 'This email is already in use.'
+            } else {
+                errors.value.email = 'Authentication failed. Please try again.'
+            }
+        }
+
     }
 };
+
+const loginUser = async () => {
+    
+    if (!loginData.value.loginEmail) {
+        errors.value.loginEmail = 'Email is required.';
+        return;
+    }
+    if (!loginData.value.loginPassword) {
+        errors.value.loginPassword = 'Password is required.';
+        return;
+    }
+
+    if (!errors.value.email && !errors.value.password) {
+        try {
+        const userCredential = await signInWithEmailAndPassword(
+            auth,
+            loginData.value.loginEmail,
+            loginData.value.loginPassword
+        );
+
+        console.log('Firebase login success:', userCredential.user);
+        clearForm();
+        router.push('/main'); 
+
+        } catch (error) {
+        console.error('Firebase login failed:', error.code);
+
+        switch (error.code) {
+            case 'auth/invalid-credential':
+            case 'auth/user-not-found':
+            case 'auth/wrong-password':
+            errors.value.email = 'Invalid email or password combination.';
+            break;
+            case 'auth/too-many-requests':
+            errors.value.email = 'Too many failed attempts. Try again later.';
+            break;
+            default:
+            errors.value.email = 'Login failed. Please check your credentials.';
+        }
+        }
+  }
+} 
+
 </script>
 
 
