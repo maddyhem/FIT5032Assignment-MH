@@ -147,8 +147,6 @@ const loginData = ref({
     loginPassword: '',
 });
 
-const submittedCards = ref([])
-
 const clearForm = () => {
     signupData.value.username = ''
     signupData.value.email = ''
