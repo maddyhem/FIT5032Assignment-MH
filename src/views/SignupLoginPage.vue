@@ -124,7 +124,7 @@
 import { ref } from 'vue'
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
-import { db } from '../main'; 
+import { db } from '../firebase/firebase'; 
 import { useRouter } from "vue-router"
 
 const router = useRouter()
