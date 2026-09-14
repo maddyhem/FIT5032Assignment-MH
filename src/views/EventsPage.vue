@@ -1,6 +1,4 @@
 <template>
-
-
     <!-- MAIN CONTENTS -->
     <div class="container-fluid mt-1 d-flex justify-content-start p-3" style="min-height: calc(100vh - 58px);">
 
