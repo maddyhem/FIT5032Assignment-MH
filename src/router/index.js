@@ -3,6 +3,7 @@ import AboutPage from '@/views/AboutPage.vue'
 import EventsPage from '@/views/EventsPage.vue'
 import MainPage from '@/views/MainPage.vue'
 import SignupLoginPage from '@/views/SignupLoginPage.vue' 
+import UserProfile from '@/views/UserProfile.vue'
 
 const routes = [
     {
@@ -28,7 +29,12 @@ const routes = [
         path: '/signuplogin',
         name: 'SignupLogin',
         component: SignupLoginPage
-    }
+    },
+    {
+        path: '/userprofile',
+        name: 'Profile',
+        component: UserProfile
+    },
 ]
 
 const router = createRouter({

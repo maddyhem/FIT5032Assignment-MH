@@ -37,14 +37,21 @@
             </div>
 
             <!-- Profile dashboard route navigator portal action node -->
-            <router-link to="/signuplogin" class="btn btn-outline-secondary rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 40px; height: 40px; padding: 0;" title="View Profile">
+            <router-link 
+                :to="currentUser ? '/userprofile' : '/signuplogin'" 
+                class="btn btn-outline-secondary rounded-circle d-inline-flex align-items-center justify-content-center" 
+                style="width: 40px; height: 40px; padding: 0;" 
+                :title="currentUser ? 'View Profile' : 'Sign In'">
                 <i class="bi bi-person-circle fs-5"></i>
             </router-link>
+
         </div>
     </nav>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { currentUser } from '@/firebase/firebase'; 
+
 const isNavbarExpanded = ref(false)
 </script>
