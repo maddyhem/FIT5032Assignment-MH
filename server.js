@@ -7,12 +7,13 @@ import process from 'node:process';
 
 const app = express();
 app.use(cors());
-app.use(express.json());
+app.use(express.json({limit: '10mb'})); 
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 app.post('/api/report-issue', async (req, res) => {
-  const { name, email, category, description } = req.body;
+  const { name, email, category, description, image } = req.body;
 
   if (!name || !email || !category || !description) {
     return res.status(400).json({ success: false, error: 'Missing reporting fields.' });
@@ -36,6 +37,17 @@ app.post('/api/report-issue', async (req, res) => {
       </div>
     `,
   };
+
+  if (image && image.base64Data) {
+    msg.attachments = [
+      {
+        content: image.base64Data, // Raw base64 string from the frontend
+        filename: image.filename,  // Original filename (e.g., 'screenshot.png')
+        type: image.type,          // File mime type (e.g., 'image/png')
+        disposition: 'attachment'
+      }
+    ];
+  }
 
   try {
     await sgMail.send(msg);

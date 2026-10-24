@@ -71,6 +71,12 @@
                         ></textarea>
                     </div>
 
+                    <!-- File Upload Section -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold" style="color: #384232;">Upload a Screenshot (Optional)</label>
+                        <input type="file" @change="handleFileChange" accept="image/*" class="form-control form-control-lg border-0 shadow-sm custom-input" />
+                    </div>
+
                     <!-- Feedback Alerts -->
                     <div v-if="status.message" :class="['alert border-0 text-center py-2 mb-4 shadow-sm', status.isError ? 'alert-danger text-danger' : 'alert-success text-success']" style="background-color: rgba(255,255,255,0.6)">
                         {{ status.message }}
@@ -112,7 +118,8 @@ const reportData = ref({
     name: '',
     email: '',
     category: '',
-    description: ''
+    description: '',
+    image: null 
 })
 
 const isLoading = ref(false)
@@ -121,8 +128,31 @@ const status = ref({
     isError: false
 })
 
+// Handle file input
+const handleFileChange = (event) => {
+    const file = event.target.files[0] 
+    if (!file) {
+        reportData.value.image = null
+        return
+    }
+
+    const reader = new FileReader()
+    reader.onloadend = () => {
+        const base64Parts = reader.result.split(',')
+        const rawBase64Data = base64Parts[1] 
+        
+        reportData.value.image = {
+            filename: file.name,
+            base64Data: rawBase64Data, 
+            type: file.type
+        }
+    }
+    reader.readAsDataURL(file)
+}
+
+
 const resetForm = () => {
-    reportData.value = { name: '', email: '', category: '', description: '' }
+    reportData.value = { name: '', email: '', category: '', description: '', image: null }
     status.value = { message: '', isError: false }
 }
 
@@ -131,7 +161,6 @@ const handleSendReport = async () => {
     status.value.message = ''
     
     try {
-        // This targets your active port 3000 server!
         const response = await axios.post('http://localhost:3000/api/report-issue', reportData.value)
         
         if (response.data.success) {
