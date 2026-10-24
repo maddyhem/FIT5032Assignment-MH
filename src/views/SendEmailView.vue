@@ -6,35 +6,67 @@
             <div class="w-100" style="max-width: 600px;">
                 <!-- Header -->
                 <div class="text-center mb-4">
-                    <h1 class="fw-bold" style="color: #384232;">Community post</h1>
+                    <h1 class="fw-bold" style="color: #384232;">Report an Issue</h1>
                     <p class="text-secondary fs-6 mb-0" style="color: #555d4e !important;">
-                        Send a message to your community.
+                        Help us improve your experience by reporting an issues you may encounter!
                     </p>
                     <hr class="w-25 mx-auto my-3" style="color: #384232; opacity: 0.25;">
                 </div>
 
-                <!-- Email Form -->
-                <form @submit.prevent="handleSendEmail" class="w-100 p-2">
-                    <!-- Subject Field -->
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold" style="color: #384232;">Subject</label>
-                        <input 
-                            v-model="emailData.subject" 
-                            type="text" 
-                            class="form-control form-control-lg border-0 shadow-sm custom-input" 
-                            placeholder="What is this regarding?" 
-                            required 
-                        />
+                <!-- Issue Report Form -->
+                <form @submit.prevent="handleSendReport" class="w-100 p-2">
+                    
+                    <div class="row">
+                        <!-- Reporter Name -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold" style="color: #384232;">Your Name</label>
+                            <input 
+                                v-model="reportData.name" 
+                                type="text" 
+                                class="form-control form-control-lg border-0 shadow-sm custom-input" 
+                                placeholder="Nature enthusiast" 
+                                required 
+                            />
+                        </div>
+
+                        <!-- Reporter Email -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold" style="color: #384232;">Your Email</label>
+                            <input 
+                                v-model="reportData.email" 
+                                type="email" 
+                                class="form-control form-control-lg border-0 shadow-sm custom-input" 
+                                placeholder="you@example.com" 
+                                required 
+                            />
+                        </div>
                     </div>
 
-                    <!-- Message Body -->
+                    <!-- Issue Type Dropdown -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold" style="color: #384232;">What is the issue related to?</label>
+                        <select 
+                            v-model="reportData.category" 
+                            class="form-select form-select-lg border-0 shadow-sm custom-input" 
+                            required
+                        >
+                            <option value="" disabled selected>Select a category...</option>
+                            <option value="Website Bug">Website Bug / Technical Glitch</option>
+                            <option value="Account / Login">Account or Login Issue</option>
+                            <option value="Events">Event issues</option>
+                            <option value="Feedback">General  Feedback</option>
+                            <option value="Other">Something Else</option>
+                        </select>
+                    </div>
+
+                    <!-- Issue Description -->
                     <div class="mb-4">
-                        <label class="form-label fw-semibold" style="color: #384232;">Your Message</label>
+                        <label class="form-label fw-semibold" style="color: #384232;">Describe the issue</label>
                         <textarea 
-                            v-model="emailData.text" 
+                            v-model="reportData.description" 
                             class="form-control form-control-lg border-0 shadow-sm custom-input" 
                             rows="5" 
-                            placeholder="Write your creative thoughts or inquiries here..." 
+                            placeholder="Please tell us what happened, or step-by-step how to find the problem..." 
                             required
                         ></textarea>
                     </div>
@@ -62,7 +94,7 @@
                             :disabled="isLoading"
                         >
                             <span v-if="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                            {{ isLoading ? 'Sending...' : 'Send Message' }}
+                            {{ isLoading ? 'Submitting...' : 'Submit Report' }}
                         </button>
                     </div>
                 </form>
@@ -76,14 +108,13 @@
 import { ref } from 'vue'
 import axios from 'axios'
 
-// Form State
-const emailData = ref({
-    to: '',
-    subject: '',
-    text: ''
+const reportData = ref({
+    name: '',
+    email: '',
+    category: '',
+    description: ''
 })
 
-// UI Interaction State
 const isLoading = ref(false)
 const status = ref({
     message: '',
@@ -91,29 +122,28 @@ const status = ref({
 })
 
 const resetForm = () => {
-    emailData.value = { to: '', subject: '', text: '' }
+    reportData.value = { name: '', email: '', category: '', description: '' }
     status.value = { message: '', isError: false }
 }
 
-const handleSendEmail = async () => {
+const handleSendReport = async () => {
     isLoading.value = true
     status.value.message = ''
     
     try {
-        // Points to your local node endpoint or serverless function
-        const response = await axios.post('http://localhost:3000/api/send-email', emailData.value)
+        // This targets your active port 3000 server!
+        const response = await axios.post('http://localhost:3000/api/report-issue', reportData.value)
         
         if (response.data.success) {
             status.value = {
-                message: '✨ Message sent cleanly back into the universe!',
+                message: '✨ Report received! Thank you for helping us patch things up.',
                 isError: false
             }
-            // Clear inputs after success
-            emailData.value = { to: '', subject: '', text: '' }
+            resetForm()
         }
     } catch (error) {
         status.value = {
-            message: '⚠️ Connection broken. Couldn\'t send email.',
+            message: '⚠️ Connection broken. Your report could not be sent to the server.',
             isError: true
         }
         console.error('Submission failure:', error)
@@ -124,11 +154,14 @@ const handleSendEmail = async () => {
 </script>
 
 <style scoped>
-/* Subtle styling to blend bootstrap inputs nicely into the earthy vibe */
 .custom-input {
     background-color: rgba(255, 255, 255, 0.75);
     color: #384232;
     transition: all 0.2s ease-in-out;
+}
+
+select.custom-input {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://w3.org' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23384232' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
 }
 
 .custom-input::placeholder {
