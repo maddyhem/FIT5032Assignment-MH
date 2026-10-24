@@ -4,6 +4,7 @@ import EventsPage from '@/views/EventsPage.vue'
 import MainPage from '@/views/MainPage.vue'
 import SignupLoginPage from '@/views/SignupLoginPage.vue' 
 import UserProfile from '@/views/UserProfile.vue'
+import SendEmailView from '@/views/SendEmailView.vue'
 
 const routes = [
     {
@@ -34,6 +35,11 @@ const routes = [
         path: '/userprofile',
         name: 'Profile',
         component: UserProfile
+    },
+    {
+        path: '/sendemail',
+        name: 'SendEmail',
+        component: SendEmailView
     },
 ]
 
