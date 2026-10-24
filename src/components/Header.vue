@@ -21,9 +21,9 @@
             <div class="collapse navbar-collapse justify-content-center" :class="{ 'show': isNavbarExpanded }" id="navbarNav">
                 <ul class="navbar-nav gap-5">
                     
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <router-link class="nav-link" to="/about" active-class="active">About</router-link>
-                    </li>
+                    </li> -->
                     <!-- <li class="nav-item">
                         <router-link class="nav-link" to="/learn" active-class="active">Learn</router-link>
                     </li>
@@ -32,6 +32,9 @@
                     </li> -->
                     <li class="nav-item">
                         <router-link class="nav-link" to="/events" active-class="active">Events</router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link class="nav-link" to="/sendemail" active-class="active">Report Issues</router-link>
                     </li>
                 </ul>
             </div>

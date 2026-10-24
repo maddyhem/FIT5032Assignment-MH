@@ -351,6 +351,11 @@ const signupUser = async () => {
 }
 
 const loginUser = async () => {
+
+  errors.value.loginEmail = ''
+  errors.value.loginPassword = ''
+  errors.value.email = ''
+  
   if (!loginData.value.loginEmail) {
     errors.value.loginEmail = 'Email is required.'
     return
