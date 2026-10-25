@@ -187,7 +187,6 @@ import { db } from '../firebase/firebase';
 import { collection, addDoc, Timestamp, doc, runTransaction, getDocs, deleteDoc, getDoc } from 'firebase/firestore'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
-const isNavbarExpanded = ref(false)
 const showEventModal = ref(false)
 const currentUser = ref(null)
 const isAdmin = ref(false)
@@ -374,9 +373,7 @@ const submitEventForm = async () => {
 const deleteEvent = async (eventId) => {
     if (!confirm("Are you sure you want to delete this event?")) return
     try {
-        // Drop standard row from database collection
         await deleteDoc(doc(db, 'events', eventId))
-        // Remove item out of the local arrays instantly
         savedEvents.value = savedEvents.value.filter(event => event.id !== eventId)
         console.log("Document successfully removed from Firestore!")
     } catch (error) {
@@ -440,18 +437,15 @@ const submitUserRating = async (eventId, userId, newRatingValue) => {
 }
 
 const handleRateEvent = async (eventId, ratingValue) => {
-    // 1. Safety Check: Verify if a user is logged in
     if (!currentUser.value) {
         alert("You must be logged in to rate this event!")
         return
     }
 
-    // 2. Extract the actual active Firebase user UID
     const currentUserId = currentUser.value.uid
     
     console.log(`Submitting a ${ratingValue}-star rating for Event ID: ${eventId} by User: ${currentUserId}`)
     
-    // 3. Fire the transaction calculation
     await submitUserRating(eventId, currentUserId, ratingValue)
 }
 
@@ -466,10 +460,8 @@ const filteredEvents = computed(() => {
 const formatDate = (dateValue) => {
     if (!dateValue) return 'No date set'
     
-    // Accept either a direct JS Date object or a parseable string smoothly
     const date = new Date(dateValue)
     
-    // Check if the date is actually valid before running string operations
     if (isNaN(date.getTime())) return 'Invalid Date'
 
     const options = { year: 'numeric', month: 'long', day: 'numeric' }
