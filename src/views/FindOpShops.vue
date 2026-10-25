@@ -79,7 +79,7 @@ import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 
-mapboxgl.accessToken = import.meta.env.MAPBOX_ACCESS_TOKEN;
+mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 
 const mapContainer = ref(null);
 const geocoderContainer = ref(null);
@@ -224,7 +224,7 @@ const findMyLocation = () => {
 
 onMounted(() => {
   // Set the access token securely from your configuration variable
-  mapboxgl.accessToken = import.meta.env.MAPBOX_ACCESS_TOKEN || 'pk.eyJ1IjoibWhlbTEiLCJhIjoiY212bm9mam4yMGoxaTJ6cTZ1cm5maHR1dyJ9.oRRTrgeb5ABxHtWHayUg_g';
+  mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 
   // 1. Initialize the baseline Map with hardcoded numerical coordinates
   map = new mapboxgl.Map({

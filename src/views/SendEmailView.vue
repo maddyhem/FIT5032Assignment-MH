@@ -24,7 +24,7 @@
                                 v-model="reportData.name" 
                                 type="text" 
                                 class="form-control form-control-lg border-0 shadow-sm custom-input" 
-                                placeholder="Nature enthusiast" 
+                                placeholder="John Doe" 
                                 required 
                             />
                         </div>
