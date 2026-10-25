@@ -34,6 +34,12 @@
                         <router-link class="nav-link" to="/events" active-class="active">Events</router-link>
                     </li>
                     <li class="nav-item">
+                        <router-link class="nav-link" to="/findopshops" active-class="active">Find Op Shops</router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link class="nav-link" to="/upcyclehub" active-class="active">Upcycle Hub</router-link>
+                    </li>
+                    <li class="nav-item">
                         <router-link class="nav-link" to="/sendemail" active-class="active">Report Issues</router-link>
                     </li>
                 </ul>

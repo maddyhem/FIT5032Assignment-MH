@@ -5,6 +5,8 @@ import MainPage from '@/views/MainPage.vue'
 import SignupLoginPage from '@/views/SignupLoginPage.vue' 
 import UserProfile from '@/views/UserProfile.vue'
 import SendEmailView from '@/views/SendEmailView.vue'
+import FindOpShops from '@/views/FindOpShops.vue'
+import UpcycleHubView from '@/views/UpcycleHubView.vue'
 
 const routes = [
     {
@@ -40,6 +42,16 @@ const routes = [
         path: '/sendemail',
         name: 'SendEmail',
         component: SendEmailView
+    },
+    {
+        path: '/findopshops',
+        name: 'FindOpShops',
+        component: FindOpShops
+    },
+    {
+        path: '/upcyclehub',
+        name: 'UpcycleHub',
+        component: UpcycleHubView
     },
 ]
 
